@@ -38,7 +38,8 @@ Library
     Build-depends:   crypto-api >= 0.5, tagged >= 0.1, cereal >= 0.2
     cpp-options:     -DHAVE_CRYPTOAPI
   Extensions:        ForeignFunctionInterface
-  Exposed-modules:   Crypto.Hash.SHA1
+  Exposed-modules:   Crypto.Hash.Util
+                     Crypto.Hash.SHA1
                      Crypto.Hash.SHA224
                      Crypto.Hash.SHA256
                      Crypto.Hash.SHA384
