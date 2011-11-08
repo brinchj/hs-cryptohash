@@ -40,7 +40,9 @@ import Data.Serialize (Serialize(..))
 import Data.Serialize.Get (getByteString)
 import Data.Serialize.Put (putByteString)
 import Data.Tagged (Tagged(..))
+
 import qualified Crypto.Classes as C (Hash(..))
+import qualified Crypto.Hash.Util as Util
 
 instance C.Hash Ctx SHA512 where
 	outputLength    = Tagged (64 * 8)
@@ -57,7 +59,15 @@ instance Serialize SHA512 where
 
 data Ctx = Ctx !ByteString
 data SHA512 = Digest !ByteString
-	deriving (Eq,Ord,Show)
+	deriving (Show)
+
+-- Constant time Eq and Compare instances
+instance Eq SHA512 where
+  (Digest a) == (Digest b) = a `Util.constTimeEq` b
+
+instance Ord SHA512 where
+  (Digest a) `compare` (Digest b) = a `Util.constTimeCompare` b
+
 
 digestSize, sizeCtx :: Int
 digestSize = 64

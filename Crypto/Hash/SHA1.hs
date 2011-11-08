@@ -32,6 +32,8 @@ import Data.ByteString (ByteString)
 import Data.ByteString.Unsafe (unsafeUseAsCString, unsafeUseAsCStringLen)
 import Data.ByteString.Internal (create, memcpy)
 
+import qualified Crypto.Hash.Util as Util
+
 #ifdef HAVE_CRYPTOAPI
 
 import Control.Monad (liftM)
@@ -56,7 +58,15 @@ instance Serialize SHA1 where
 
 data Ctx = Ctx !ByteString
 data SHA1 = Digest !ByteString
-	deriving (Eq,Ord,Show)
+	deriving (Show)
+
+-- Constant time Eq and Compare instances
+instance Eq SHA1 where
+  (Digest a) == (Digest b) = a `Util.constTimeEq` b
+
+instance Ord SHA1 where
+  (Digest a) `compare` (Digest b) = a `Util.constTimeCompare` b
+
 
 digestSize, sizeCtx :: Int
 digestSize = 20
